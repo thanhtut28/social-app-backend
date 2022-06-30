@@ -7,6 +7,10 @@
       "rootDir": ".",
       "outDir": "dist",
       "sourceMap": true,
-      "esModuleInterop": true
-   }
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true
+   },
+   "include": ["prisma/*.ts", "src/**/*"]
 }

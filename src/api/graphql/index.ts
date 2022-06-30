@@ -1,3 +1,4 @@
-import "./queries";
-import "./mutations";
-import "./User";
+import "./user";
+import "./post";
+import "./follows";
+import "./comments";

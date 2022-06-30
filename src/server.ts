@@ -7,13 +7,13 @@ import { createAccessToken, createRefreshToken } from "./utils/auth";
 import { sendRefreshToken } from "./utils/sendRefreshToken";
 import cookieParser from "cookie-parser";
 import { db } from "./db";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+// import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 (async () => {
    const apolloServer = new ApolloServer({
       schema: schema,
       context: ({ req, res }) => ({ req, res }),
-      plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+      // plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
    });
 
    const app = express();
