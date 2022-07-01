@@ -1,5 +1,5 @@
 import { builder } from "../../builder";
-import {} from "@pothos/core";
+import { db } from "../../../db";
 
 builder.prismaObject("Post", {
    findUnique: post => ({ id: post.id }),
@@ -16,7 +16,39 @@ builder.prismaObject("Post", {
       authorId: t.exposeInt("authorId"),
       author: t.relation("author"),
       comments: t.relation("comments"),
+      // likes: t.relation("likes"),
+      likeStatus: t.field({
+         type: "Boolean",
+         args: {
+            userId: t.arg({ type: "Int", required: true }),
+         },
+         resolve: async (post, { userId }) => {
+            if (!userId) {
+               return false;
+            }
+
+            const like = await db.like.findFirst({
+               where: {
+                  authorId: userId,
+                  postId: post.id,
+               },
+            });
+
+            if (!like) {
+               return false;
+            }
+
+            return like?.status;
+         },
+      }),
+      likeCount: t.exposeInt("likeCount"),
    }),
 });
 
-// export const UpdatePostInput = builder.inputType('')
+export const GetAllPostsInput = builder.inputType("GetAllPostsInput", {
+   fields: t => ({
+      userId: t.int({ required: true }),
+      limit: t.int({ required: true }),
+      cursor: t.int(),
+   }),
+});

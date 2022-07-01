@@ -10,6 +10,7 @@ builder.mutationFields(t => ({
    signUp: t.prismaField({
       type: "User",
       nullable: true,
+      skipTypeScopes: true,
       args: {
          input: t.arg({
             type: SignUpInput,
@@ -31,6 +32,7 @@ builder.mutationFields(t => ({
    signIn: t.field({
       type: LoginResponse,
       nullable: true,
+      skipTypeScopes: true,
       args: {
          input: t.arg({
             type: LoginInput,

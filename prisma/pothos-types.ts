@@ -1,4 +1,4 @@
-import type { Prisma, User, Post, Comment, Follows } from "@prisma/client";
+import type { Prisma, User, Post, Comment, Follows, Like } from "@prisma/client";
 export default interface PrismaTypes {
     User: {
         Name: "User";
@@ -6,9 +6,9 @@ export default interface PrismaTypes {
         Include: Prisma.UserInclude;
         Select: Prisma.UserSelect;
         Where: Prisma.UserWhereUniqueInput;
-        Fields: "posts" | "comments" | "following" | "followedBy";
-        RelationName: "posts" | "comments" | "following" | "followedBy";
-        ListRelations: "posts" | "comments" | "following" | "followedBy";
+        Fields: "posts" | "comments" | "following" | "followedBy" | "likes";
+        RelationName: "posts" | "comments" | "following" | "followedBy" | "likes";
+        ListRelations: "posts" | "comments" | "following" | "followedBy" | "likes";
         Relations: {
             posts: {
                 Shape: Post[];
@@ -26,6 +26,10 @@ export default interface PrismaTypes {
                 Shape: Follows[];
                 Types: PrismaTypes["Follows"];
             };
+            likes: {
+                Shape: Like[];
+                Types: PrismaTypes["Like"];
+            };
         };
     };
     Post: {
@@ -34,9 +38,9 @@ export default interface PrismaTypes {
         Include: Prisma.PostInclude;
         Select: Prisma.PostSelect;
         Where: Prisma.PostWhereUniqueInput;
-        Fields: "author" | "comments";
-        RelationName: "author" | "comments";
-        ListRelations: "comments";
+        Fields: "author" | "comments" | "likes";
+        RelationName: "author" | "comments" | "likes";
+        ListRelations: "comments" | "likes";
         Relations: {
             author: {
                 Shape: User;
@@ -45,6 +49,10 @@ export default interface PrismaTypes {
             comments: {
                 Shape: Comment[];
                 Types: PrismaTypes["Comment"];
+            };
+            likes: {
+                Shape: Like[];
+                Types: PrismaTypes["Like"];
             };
         };
     };
@@ -85,6 +93,26 @@ export default interface PrismaTypes {
             following: {
                 Shape: User;
                 Types: PrismaTypes["User"];
+            };
+        };
+    };
+    Like: {
+        Name: "Like";
+        Shape: Like;
+        Include: Prisma.LikeInclude;
+        Select: Prisma.LikeSelect;
+        Where: Prisma.LikeWhereUniqueInput;
+        Fields: "author" | "post";
+        RelationName: "author" | "post";
+        ListRelations: never;
+        Relations: {
+            author: {
+                Shape: User;
+                Types: PrismaTypes["User"];
+            };
+            post: {
+                Shape: Post;
+                Types: PrismaTypes["Post"];
             };
         };
     };

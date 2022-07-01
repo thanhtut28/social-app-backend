@@ -27,17 +27,21 @@ model User {
   comments   Comment[]
   following  Follows[] @relation("follower")
   followedBy Follows[] @relation("following")
+  likes      Like[]
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  title     String
-  image     String?
-  authorId  Int
-  author    User      @relation(fields: [authorId], references: [id])
-  comments  Comment[]
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String
+  image      String?
+  authorId   Int
+  author     User      @relation(fields: [authorId], references: [id])
+  comments   Comment[]
+  likes      Like[]
+  likeStatus Boolean   @default(false)
+  likeCount  Int       @default(0)
 }
 
 model Comment {
@@ -63,3 +67,14 @@ model Follows {
 // In case person A follows person B
 // person A is follower and person B is following
 // so person A following increases and person B follower increases
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  status    Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  Int
+  postId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+}

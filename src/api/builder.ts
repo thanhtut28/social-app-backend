@@ -1,5 +1,6 @@
 import SchemaBuilder from "@pothos/core";
 import PrismaPlugin from "@pothos/plugin-prisma";
+import ScopeAuthPlugin from "@pothos/plugin-scope-auth";
 // This is the default location for the generator, but this can be
 // customized as described above.
 // Using a type only import will help avoid issues with undeclared
@@ -17,11 +18,17 @@ export const builder = new SchemaBuilder<{
          Output: Date;
       };
    };
+   AuthScopes: {
+      isLoggedIn: boolean;
+   };
 }>({
-   plugins: [PrismaPlugin],
+   plugins: [ScopeAuthPlugin, PrismaPlugin],
    prisma: {
       client: prisma,
    },
+   authScopes: context => ({
+      isLoggedIn: !!context.userId,
+   }),
 });
 
 builder.scalarType("Date", {

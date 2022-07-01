@@ -2,19 +2,37 @@ import { db } from "../../../db";
 import { builder } from "../../builder";
 
 builder.mutationFields(t => ({
-   followUser: t.prismaField({
-      type: "Follows",
+   followUser: t.field({
+      type: "Boolean",
       args: {
-         followerId: t.arg({ type: "Int", required: true }),
          followingId: t.arg({ type: "Int", required: true }),
       },
-      resolve: (_query, _root, { followerId, followingId }) => {
-         return db.follows.create({
+      resolve: async (_root, { followingId }, { userId }) => {
+         if (!userId) throw new Error("user is not logged in");
+         const isFollowed = !!(await db.follows.findFirst({
+            where: { followerId: userId, followingId },
+         }));
+
+         if (isFollowed) {
+            // toggle follow ==> unfollow user
+            await db.follows.delete({
+               where: {
+                  followerId_followingId: {
+                     followerId: userId,
+                     followingId,
+                  },
+               },
+            });
+            return true;
+         }
+
+         await db.follows.create({
             data: {
-               followerId,
+               followerId: userId,
                followingId,
             },
          });
+         return true;
       },
    }),
 }));

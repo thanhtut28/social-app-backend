@@ -1,3 +1,4 @@
+import { IS_NOT_LOGGEDIN } from "../../../constants";
 import { db } from "../../../db";
 import { builder } from "../../builder";
 
@@ -5,14 +6,14 @@ builder.mutationFields(t => ({
    createComment: t.prismaField({
       type: "Comment",
       args: {
-         authorId: t.arg({ type: "Int", required: true }),
          postId: t.arg({ type: "Int", required: true }),
          comment: t.arg({ type: "String", required: true }),
       },
-      resolve: (_query, _root, { authorId, postId, comment }) => {
+      resolve: (_query, _root, { postId, comment }, { userId }) => {
+         if (!userId) throw new Error(IS_NOT_LOGGEDIN);
          return db.comment.create({
             data: {
-               authorId,
+               authorId: userId,
                postId,
                comment,
             },
@@ -23,19 +24,18 @@ builder.mutationFields(t => ({
       type: "Comment",
       nullable: true,
       args: {
-         authorId: t.arg({ type: "Int", required: true }),
          newComment: t.arg({ type: "String", required: true }),
          commentId: t.arg({ type: "Int", required: true }),
       },
-      resolve: async (_query, _root, { authorId, newComment, commentId }) => {
+      resolve: async (_query, _root, { newComment, commentId }, { userId }) => {
+         if (!userId) throw new Error(IS_NOT_LOGGEDIN);
          const comment = await db.comment.findFirst({
             where: {
                id: commentId,
-               authorId,
             },
          });
 
-         if (comment?.authorId === authorId) {
+         if (comment?.authorId === userId) {
             return db.comment.update({
                where: {
                   id: commentId,
@@ -46,7 +46,7 @@ builder.mutationFields(t => ({
             });
          }
 
-         return null;
+         throw new Error(`You cannot update other comments`);
       },
    }),
 }));

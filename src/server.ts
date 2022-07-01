@@ -1,4 +1,5 @@
-import express from "express";
+import "dotenv/config";
+import express, { Request } from "express";
 import { ApolloServer } from "apollo-server-express";
 import { schema } from "./api/schema";
 import cors from "cors";
@@ -7,16 +8,19 @@ import { createAccessToken, createRefreshToken } from "./utils/auth";
 import { sendRefreshToken } from "./utils/sendRefreshToken";
 import cookieParser from "cookie-parser";
 import { db } from "./db";
+import { isAuth } from "./utils/isAuth";
+
 // import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 (async () => {
    const apolloServer = new ApolloServer({
       schema: schema,
-      context: ({ req, res }) => ({ req, res }),
+      context: async ({ req, res }) => ({ req, res, userId: isAuth(req) }),
       // plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
    });
 
    const app = express();
+
    app.use(
       cors({
          origin: [process.env.APOLLO_STUDIO_URL!],
