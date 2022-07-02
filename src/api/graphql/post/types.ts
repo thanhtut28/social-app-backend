@@ -1,5 +1,7 @@
 import { builder } from "../../builder";
 import { db } from "../../../db";
+import { AuthenticationError } from "apollo-server-express";
+import { IS_NOT_LOGGEDIN } from "../../../constants";
 
 builder.prismaObject("Post", {
    findUnique: post => ({ id: post.id }),
@@ -19,13 +21,8 @@ builder.prismaObject("Post", {
       // likes: t.relation("likes"),
       likeStatus: t.field({
          type: "Boolean",
-         args: {
-            userId: t.arg({ type: "Int", required: true }),
-         },
-         resolve: async (post, { userId }) => {
-            if (!userId) {
-               return false;
-            }
+         resolve: async (post, _args, { userId }) => {
+            if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
 
             const like = await db.like.findFirst({
                where: {
@@ -47,7 +44,6 @@ builder.prismaObject("Post", {
 
 export const GetAllPostsInput = builder.inputType("GetAllPostsInput", {
    fields: t => ({
-      userId: t.int({ required: true }),
       limit: t.int({ required: true }),
       cursor: t.int(),
    }),

@@ -50,6 +50,7 @@ export const UserRef = builder.prismaObject("User", {
       email: t.exposeString("email"),
       // password: t.exposeString("password"),
       posts: t.relation("posts"),
+      postsCount: t.relationCount("posts"),
       following: t.relation("following"),
       followers: t.relation("followedBy"),
       followingCount: t.relationCount("following"),

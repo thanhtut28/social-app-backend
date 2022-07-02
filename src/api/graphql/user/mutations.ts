@@ -76,7 +76,7 @@ builder.mutationFields(t => ({
             required: true,
          }),
       },
-      resolve: async (_root, { input: { email, password, newPassword } }, { req }) => {
+      resolve: async (_root, { input: { email, password, newPassword } }) => {
          const user = await db.user.findFirst({ where: { email } });
 
          if (!user) {

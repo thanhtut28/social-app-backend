@@ -1,3 +1,5 @@
+import { AuthenticationError } from "apollo-server-express";
+import { IS_NOT_LOGGEDIN } from "../../../constants";
 import { db } from "../../../db";
 import { builder } from "../../builder";
 
@@ -12,12 +14,9 @@ builder.mutationFields(t => ({
          image: t.arg({
             type: "String",
          }),
-         userId: t.arg({
-            type: "Int",
-            required: true,
-         }),
       },
-      resolve: (_query, _root, { title, image, userId }) => {
+      resolve: (_query, _root, { title, image }, { userId }) => {
+         if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
          return db.post.create({
             data: {
                authorId: userId,
@@ -54,16 +53,12 @@ builder.mutationFields(t => ({
          image: t.arg({
             type: "String",
          }),
-         userId: t.arg({
-            type: "Int",
-            required: true,
-         }),
          postId: t.arg({
             type: "Int",
             required: true,
          }),
       },
-      resolve: async (_query, _root, { title, image, userId, postId }) => {
+      resolve: async (_query, _root, { title, image, postId }, { userId }) => {
          const post = await db.post.findFirst({
             where: {
                id: postId,

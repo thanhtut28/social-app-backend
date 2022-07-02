@@ -1,3 +1,5 @@
+import { AuthenticationError } from "apollo-server-express";
+import { IS_NOT_LOGGEDIN } from "../../../constants";
 import { db } from "../../../db";
 import { builder } from "../../builder";
 
@@ -8,7 +10,7 @@ builder.mutationFields(t => ({
          followingId: t.arg({ type: "Int", required: true }),
       },
       resolve: async (_root, { followingId }, { userId }) => {
-         if (!userId) throw new Error("user is not logged in");
+         if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
          const isFollowed = !!(await db.follows.findFirst({
             where: { followerId: userId, followingId },
          }));

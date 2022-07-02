@@ -1,4 +1,3 @@
-import { Prisma, User } from "@prisma/client";
 import { Request, Response } from "express";
 
 export interface Context {

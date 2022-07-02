@@ -1,3 +1,5 @@
+import { AuthenticationError } from "apollo-server-express";
+import { IS_NOT_LOGGEDIN } from "../../../constants";
 import { db } from "../../../db";
 import { builder } from "../../builder";
 import { GetAllPostsInput } from "./types";
@@ -11,7 +13,8 @@ builder.queryFields(t => ({
             required: true,
          }),
       },
-      resolve: (query, _, { input: { userId, limit, cursor } }) => {
+      resolve: (query, _, { input: { limit, cursor } }, { userId }) => {
+         if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
          return db.post.findMany({
             ...query,
             ...(cursor && {

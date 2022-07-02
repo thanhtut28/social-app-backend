@@ -1,3 +1,4 @@
+import { AuthenticationError } from "apollo-server-express";
 import { IS_NOT_LOGGEDIN } from "../../../constants";
 import { db } from "../../../db";
 import { builder } from "../../builder";
@@ -10,7 +11,7 @@ builder.mutationFields(t => ({
          comment: t.arg({ type: "String", required: true }),
       },
       resolve: (_query, _root, { postId, comment }, { userId }) => {
-         if (!userId) throw new Error(IS_NOT_LOGGEDIN);
+         if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
          return db.comment.create({
             data: {
                authorId: userId,
@@ -22,13 +23,12 @@ builder.mutationFields(t => ({
    }),
    updateComment: t.prismaField({
       type: "Comment",
-      nullable: true,
       args: {
          newComment: t.arg({ type: "String", required: true }),
          commentId: t.arg({ type: "Int", required: true }),
       },
       resolve: async (_query, _root, { newComment, commentId }, { userId }) => {
-         if (!userId) throw new Error(IS_NOT_LOGGEDIN);
+         if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
          const comment = await db.comment.findFirst({
             where: {
                id: commentId,

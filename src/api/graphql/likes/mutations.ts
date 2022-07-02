@@ -1,3 +1,4 @@
+import { AuthenticationError } from "apollo-server-express";
 import { IS_NOT_LOGGEDIN } from "../../../constants";
 import { db } from "../../../db";
 import { builder } from "../../builder";
@@ -9,7 +10,7 @@ builder.mutationFields(t => ({
          postId: t.arg({ type: "Int", required: true }),
       },
       resolve: async (_root, { postId }, { userId }) => {
-         if (!userId) throw new Error(IS_NOT_LOGGEDIN);
+         if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
          const like = await db.like.findFirst({
             where: {
                authorId: userId,
