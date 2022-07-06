@@ -2,7 +2,7 @@ import { builder } from "../../builder";
 
 builder.prismaObject("Like", {
    fields: t => ({
-      id: t.exposeID("id"),
+      id: t.exposeInt("id"),
       status: t.exposeBoolean("status"),
       author: t.relation("author"),
       post: t.relation("post"),

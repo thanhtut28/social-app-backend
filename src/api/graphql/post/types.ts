@@ -6,7 +6,7 @@ import { IS_NOT_LOGGEDIN } from "../../../constants";
 builder.prismaObject("Post", {
    findUnique: post => ({ id: post.id }),
    fields: t => ({
-      id: t.exposeID("id"),
+      id: t.exposeInt("id"),
       title: t.exposeString("title"),
       image: t.expose("image", {
          type: "String",
@@ -18,6 +18,7 @@ builder.prismaObject("Post", {
       authorId: t.exposeInt("authorId"),
       author: t.relation("author"),
       comments: t.relation("comments"),
+      commentsCount: t.relationCount("comments"),
       // likes: t.relation("likes"),
       likeStatus: t.field({
          type: "Boolean",

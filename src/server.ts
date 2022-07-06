@@ -23,8 +23,12 @@ import { isAuth } from "./utils/isAuth";
 
    app.use(
       cors({
-         origin: [process.env.APOLLO_STUDIO_URL!, process.env.FRONTEND_URL!],
-         // credentials: true,
+         origin: [
+            process.env.APOLLO_STUDIO_URL!,
+            process.env.FRONTEND_URL!,
+            "http://192.168.1.4:3000",
+         ],
+         credentials: true,
       })
    );
    app.use(cookieParser());

@@ -45,7 +45,7 @@ export const UserRef = builder.prismaObject("User", {
    findUnique: user => ({ id: user.id }),
    name: "User",
    fields: t => ({
-      id: t.exposeID("id"),
+      id: t.exposeInt("id"),
       name: t.exposeString("name"),
       email: t.exposeString("email"),
       // password: t.exposeString("password"),

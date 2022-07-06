@@ -19,7 +19,7 @@ builder.mutationFields(t => ({
          });
 
          if (like) {
-            await db.$transaction([
+            const data = await db.$transaction([
                db.like.update({
                   where: {
                      id: like.id,
@@ -39,10 +39,11 @@ builder.mutationFields(t => ({
                   },
                }),
             ]);
+            console.log("already liked", data);
 
             return true;
          }
-         await db.$transaction([
+         const data = await db.$transaction([
             db.like.create({
                data: {
                   authorId: userId,
@@ -61,6 +62,8 @@ builder.mutationFields(t => ({
                },
             }),
          ]);
+
+         console.log("like", data);
          return true;
       },
    }),
