@@ -21,6 +21,26 @@ builder.mutationFields(t => ({
          });
       },
    }),
+   createReply: t.prismaField({
+      type: "Comment",
+      args: {
+         postId: t.arg({ type: "Int", required: true }),
+         comment: t.arg({ type: "String", required: true }),
+         parentId: t.arg({ type: "Int", required: true }),
+      },
+      resolve: (query, _root, { postId, comment, parentId }, { userId }) => {
+         if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
+         return db.comment.create({
+            ...query,
+            data: {
+               authorId: userId,
+               postId,
+               parentId,
+               comment,
+            },
+         });
+      },
+   }),
    updateComment: t.prismaField({
       type: "Comment",
       args: {

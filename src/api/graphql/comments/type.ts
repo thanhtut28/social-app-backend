@@ -11,6 +11,12 @@ builder.prismaObject("Comment", {
       authorId: t.exposeInt("authorId"),
       post: t.relation("post"),
       postId: t.exposeInt("postId"),
+      parentId: t.expose("parentId", {
+         type: "Int",
+         nullable: true,
+      }),
+      parent: t.relation("parent", { nullable: true }),
+      children: t.relation("children", { nullable: true }),
    }),
 });
 

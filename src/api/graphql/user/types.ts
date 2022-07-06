@@ -55,5 +55,6 @@ export const UserRef = builder.prismaObject("User", {
       followers: t.relation("followedBy"),
       followingCount: t.relationCount("following"),
       followersCount: t.relationCount("followedBy"),
+      collections: t.relation("collections"),
    }),
 });

@@ -9,10 +9,10 @@ builder.mutationFields(t => ({
       args: {
          title: t.arg({
             type: "String",
-            required: true,
          }),
          image: t.arg({
             type: "String",
+            required: true,
          }),
       },
       resolve: (_query, _root, { title, image }, { userId }) => {

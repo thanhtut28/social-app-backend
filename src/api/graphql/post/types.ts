@@ -7,11 +7,11 @@ builder.prismaObject("Post", {
    findUnique: post => ({ id: post.id }),
    fields: t => ({
       id: t.exposeInt("id"),
-      title: t.exposeString("title"),
-      image: t.expose("image", {
+      title: t.expose("title", {
          type: "String",
          nullable: true,
       }),
+      image: t.exposeString("image"),
       createdAt: t.expose("createdAt", {
          type: "Date",
       }),

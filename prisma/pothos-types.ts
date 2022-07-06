@@ -1,4 +1,4 @@
-import type { Prisma, User, Post, Comment, Follows, Like } from "@prisma/client";
+import type { Prisma, User, Post, Comment, Follows, Like, CollectionsOnPosts } from "@prisma/client";
 export default interface PrismaTypes {
     User: {
         Name: "User";
@@ -6,9 +6,9 @@ export default interface PrismaTypes {
         Include: Prisma.UserInclude;
         Select: Prisma.UserSelect;
         Where: Prisma.UserWhereUniqueInput;
-        Fields: "posts" | "comments" | "following" | "followedBy" | "likes";
-        RelationName: "posts" | "comments" | "following" | "followedBy" | "likes";
-        ListRelations: "posts" | "comments" | "following" | "followedBy" | "likes";
+        Fields: "posts" | "comments" | "following" | "followedBy" | "likes" | "collections";
+        RelationName: "posts" | "comments" | "following" | "followedBy" | "likes" | "collections";
+        ListRelations: "posts" | "comments" | "following" | "followedBy" | "likes" | "collections";
         Relations: {
             posts: {
                 Shape: Post[];
@@ -30,6 +30,10 @@ export default interface PrismaTypes {
                 Shape: Like[];
                 Types: PrismaTypes["Like"];
             };
+            collections: {
+                Shape: CollectionsOnPosts[];
+                Types: PrismaTypes["CollectionsOnPosts"];
+            };
         };
     };
     Post: {
@@ -38,9 +42,9 @@ export default interface PrismaTypes {
         Include: Prisma.PostInclude;
         Select: Prisma.PostSelect;
         Where: Prisma.PostWhereUniqueInput;
-        Fields: "author" | "comments" | "likes";
-        RelationName: "author" | "comments" | "likes";
-        ListRelations: "comments" | "likes";
+        Fields: "author" | "comments" | "likes" | "collectors";
+        RelationName: "author" | "comments" | "likes" | "collectors";
+        ListRelations: "comments" | "likes" | "collectors";
         Relations: {
             author: {
                 Shape: User;
@@ -54,6 +58,10 @@ export default interface PrismaTypes {
                 Shape: Like[];
                 Types: PrismaTypes["Like"];
             };
+            collectors: {
+                Shape: CollectionsOnPosts[];
+                Types: PrismaTypes["CollectionsOnPosts"];
+            };
         };
     };
     Comment: {
@@ -62,9 +70,9 @@ export default interface PrismaTypes {
         Include: Prisma.CommentInclude;
         Select: Prisma.CommentSelect;
         Where: Prisma.CommentWhereUniqueInput;
-        Fields: "author" | "post";
-        RelationName: "author" | "post";
-        ListRelations: never;
+        Fields: "author" | "post" | "parent" | "children";
+        RelationName: "author" | "post" | "parent" | "children";
+        ListRelations: "children";
         Relations: {
             author: {
                 Shape: User;
@@ -73,6 +81,14 @@ export default interface PrismaTypes {
             post: {
                 Shape: Post;
                 Types: PrismaTypes["Post"];
+            };
+            parent: {
+                Shape: Comment | null;
+                Types: PrismaTypes["Comment"];
+            };
+            children: {
+                Shape: Comment[];
+                Types: PrismaTypes["Comment"];
             };
         };
     };
@@ -107,6 +123,26 @@ export default interface PrismaTypes {
         ListRelations: never;
         Relations: {
             author: {
+                Shape: User;
+                Types: PrismaTypes["User"];
+            };
+            post: {
+                Shape: Post;
+                Types: PrismaTypes["Post"];
+            };
+        };
+    };
+    CollectionsOnPosts: {
+        Name: "CollectionsOnPosts";
+        Shape: CollectionsOnPosts;
+        Include: Prisma.CollectionsOnPostsInclude;
+        Select: Prisma.CollectionsOnPostsSelect;
+        Where: Prisma.CollectionsOnPostsWhereUniqueInput;
+        Fields: "user" | "post";
+        RelationName: "user" | "post";
+        ListRelations: never;
+        Relations: {
+            user: {
                 Shape: User;
                 Types: PrismaTypes["User"];
             };

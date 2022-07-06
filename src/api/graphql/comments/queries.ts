@@ -15,7 +15,7 @@ builder.queryFields(t => ({
       },
       resolve: (query, _root, { input: { postId, limit, cursor } }, { userId }) => {
          if (!userId) throw new AuthenticationError(IS_NOT_LOGGEDIN);
-
+         console.log("qi", query);
          return db.comment.findMany({
             ...query,
             ...(cursor && {
